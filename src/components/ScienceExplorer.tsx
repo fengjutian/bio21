@@ -6,16 +6,16 @@ import { deeperQuestions } from '../data/questionBank';
 type ExplorerTab = 'graph' | 'diagnosis' | 'prereq' | 'animation' | 'sources';
 type Topic = { id:string; name:string; group:string; desc:string; links:string[] };
 const topics:Topic[] = [
- {id:'dna',name:'DNA 结构',group:'遗传信息',desc:'DNA 通常由两条反向平行的多核苷酸链构成；A–T、G–C 的互补配对使序列能够被复制。',links:['replication','rna','pcr','sanger']},
- {id:'replication',name:'DNA 复制',group:'分子机制',desc:'复制机器以亲代 DNA 链为模板合成新链。DNA 聚合酶通常沿新链 5′→3′ 方向延伸，并需要引物提供可延伸的 3′-OH。',links:['dna','polymerase','cell']},
- {id:'rna',name:'RNA 转录',group:'遗传信息',desc:'RNA 聚合酶读取 DNA 模板链并合成 RNA；RNA 的序列与编码链相近，但通常以 U 替代 T。',links:['dna','protein','cell']},
- {id:'protein',name:'蛋白质翻译',group:'细胞功能',desc:'核糖体读取 mRNA 密码子，tRNA 递送相应氨基酸，形成多肽；折叠和修饰进一步影响功能。',links:['rna','metabolism','cell']},
- {id:'cell',name:'细胞与调控',group:'生命系统',desc:'细胞将遗传信息、代谢反应、膜运输和调控网络整合为动态系统。基因表达会受环境和细胞状态影响。',links:['replication','rna','protein','metabolism','fermentation']},
- {id:'metabolism',name:'代谢与酶',group:'生命系统',desc:'酶催化代谢反应，代谢网络转化物质与能量；酶活性会受温度、pH、底物和调控等因素影响。',links:['protein','cell','fermentation']},
- {id:'polymerase',name:'DNA 聚合酶',group:'分子工具',desc:'DNA 聚合酶催化核苷酸加入新生 DNA 链。不同聚合酶的耐热性、保真度、过程性和校对能力存在差异。',links:['replication','pcr','sanger']},
- {id:'pcr',name:'PCR 扩增',group:'实验技术',desc:'引物界定目标区域，循环中的变性、退火和延伸使目标片段扩增。实际扩增效率并非始终为 100%。',links:['dna','polymerase','sanger']},
- {id:'sanger',name:'Sanger 测序',group:'实验技术',desc:'测序反应中掺入荧光标记的双脱氧核苷酸会终止延伸；毛细管电泳按片段长度分离，再读取荧光信号。',links:['dna','polymerase','pcr']},
- {id:'fermentation',name:'发酵与生物反应器',group:'工程应用',desc:'细胞或微生物在受控环境中转化底物并生成目标产物。放大时还需考虑传质、混合、热量移除和过程控制。',links:['cell','metabolism','protein']},
+ {id:'dna',name:'DNA 结构',group:'遗传信息',desc:'两条反向平行的链通过 A=T、G≡C 配对；人类基因组约 3×10⁹ bp，双螺旋每圈约 10.5 bp。',links:['replication','rna','pcr','sanger']},
+ {id:'replication',name:'DNA 复制',group:'分子机制',desc:'复制叉解旋后，聚合酶沿新链 5′→3′ 延伸；领先链连续合成，滞后链以冈崎片段分段合成。',links:['dna','polymerase','cell']},
+ {id:'rna',name:'RNA 转录',group:'遗传信息',desc:'RNA 聚合酶读取模板链合成 RNA；真核 mRNA 还要加帽、剪接和加 poly(A) 尾，细菌转录与翻译可偶联。',links:['dna','protein','cell']},
+ {id:'protein',name:'蛋白质翻译',group:'细胞功能',desc:'核糖体每 3 个碱基读一个密码子；tRNA 递送氨基酸并形成肽键，随后折叠、修饰才可能产生功能。',links:['rna','metabolism','cell']},
+ {id:'cell',name:'细胞与调控',group:'生命系统',desc:'细胞用膜维持内外差异，用 ATP 供能，用 DNA→RNA→蛋白质处理信息；细胞类型差异主要来自基因使用方式。',links:['replication','rna','protein','metabolism','fermentation']},
+ {id:'metabolism',name:'代谢与酶',group:'生命系统',desc:'酶降低活化能；糖酵解净得 2 ATP 和 2 NADH，三羧酸循环与氧化磷酸化继续产生 ATP。',links:['protein','cell','fermentation']},
+ {id:'polymerase',name:'DNA 聚合酶',group:'分子工具',desc:'聚合酶从引物 3′-OH 端延伸；Taq 耐热但无校对，Q5 具 3′→5′ 校对活性，保真度更高。',links:['replication','pcr','sanger']},
+ {id:'pcr',name:'PCR 扩增',group:'实验技术',desc:'变性约 94–98°C、退火 50–65°C、延伸 72°C；30 轮理想扩增约 10⁹ 倍，实际会进入平台期。',links:['dna','polymerase','sanger']},
+ {id:'sanger',name:'Sanger 测序',group:'实验技术',desc:'ddNTP 掺入后终止延伸；毛细管电泳按长度分离，最短片段先读出，得到新合成链的 5′→3′ 序列。',links:['dna','polymerase','pcr']},
+ {id:'fermentation',name:'发酵与生物反应器',group:'工程应用',desc:'搅拌供氧、控温控 pH，让细胞把底物转成产物；放大受 kLa、混合时间、剪切和热量移除限制。',links:['cell','metabolism','protein']},
 ];
 const topicById = Object.fromEntries(topics.map(t=>[t.id,t])) as Record<string,Topic>;
 
