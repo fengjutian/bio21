@@ -211,3 +211,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* v2.7 — fluid content canvas */
+.overview-page,.page-section{
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:20px;
+}
+.course-workspace{
+  width:100%;
+  grid-template-columns:minmax(300px,clamp(320px,32vw,520px)) minmax(0,1fr);
+  gap:20px;
+}
+.course-list-panel,.lesson-panel{min-width:0}
+.page-heading{margin-bottom:20px}
+
+@media(max-width:1050px){
+  .course-workspace{grid-template-columns:minmax(260px,38%) minmax(0,1fr)}
+}
+
+@media(max-width:900px){
+  .course-workspace{grid-template-columns:1fr}
+}
+
+@media(max-width:760px){
+  .overview-page,.page-section{padding:20px}
+}
