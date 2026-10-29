@@ -221,14 +221,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 .course-workspace{
   width:100%;
-  grid-template-columns:minmax(300px,clamp(320px,32vw,520px)) minmax(0,1fr);
+  grid-template-columns:clamp(280px,24vw,380px) minmax(0,1fr);
   gap:20px;
 }
 .course-list-panel,.lesson-panel{min-width:0}
 .page-heading{margin-bottom:20px}
 
 @media(max-width:1050px){
-  .course-workspace{grid-template-columns:minmax(260px,38%) minmax(0,1fr)}
+  .course-workspace{grid-template-columns:clamp(260px,34vw,320px) minmax(0,1fr)}
 }
 
 @media(max-width:900px){
@@ -237,4 +237,27 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 @media(max-width:760px){
   .overview-page,.page-section{padding:20px}
+}
+
+/* Desktop course workspace: keep the two panes aligned to the viewport. */
+@media(min-width:901px){
+  body:has(.course-workspace){overflow:hidden}
+  .page-section:has(.course-workspace){
+    height:calc(100dvh - 61px);
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .page-section:has(.course-workspace) .page-heading{flex:0 0 auto}
+  .course-workspace{
+    flex:1 1 auto;
+    min-height:0;
+    align-items:stretch;
+  }
+  .course-list-panel,.lesson-panel{height:100%;min-height:0}
+  .course-list-panel{display:flex;flex-direction:column}
+  .course-list{flex:1 1 auto;max-height:none;min-height:0}
+  .lesson-panel{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+  .lesson-panel::-webkit-scrollbar{display:none}
 }
