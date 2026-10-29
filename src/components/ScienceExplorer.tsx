@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { textbook } from '../data/textbook';
 import { courses } from '../data/courses';
 import { deeperQuestions } from '../data/questionBank';
+import { findConcept } from '../data/concepts';
 
 type ExplorerTab = 'graph' | 'diagnosis' | 'prereq' | 'animation' | 'sources';
 type Topic = { id:string; name:string; group:string; desc:string; links:string[] };
@@ -46,6 +47,15 @@ const nodeMeta: Record<string,{day:number;sourceIndexes:number[];questionDays:nu
 };
 const relationLabels: Record<RelationType,string> = {prerequisite:'前置依赖',mechanism:'机制关联',application:'应用延伸'};
 
+/** 网络节点 → 概念库中文术语。用于从知识网络直达概念条目。 */
+const nodeConceptTerms: Record<string,string[]> = {
+ dna:['DNA','DNA双螺旋','碱基互补配对','方向性'], replication:['复制','半保留复制','复制叉','前导链与后随链','冈崎片段','引物酶'],
+ rna:['RNA','转录','加帽与加尾','RNA剪接'], protein:['蛋白质','翻译','密码子','肽键','蛋白质折叠'],
+ cell:['细胞','细胞膜','细胞核','线粒体','真核细胞','原核细胞'], metabolism:['代谢','酶','酶动力学','ATP','糖酵解','三羧酸循环','电子传递链','氧化磷酸化'],
+ polymerase:['DNA聚合酶','校对功能'], pcr:['PCR','引物','变性','退火','延伸','循环扩增','平台期'],
+ sanger:['Sanger测序','ddNTP','色谱图','质量值'], fermentation:['发酵','生物反应器','底物','滴度','产率','生产强度','溶氧','传质']
+};
+
 // Explicit concept-to-question mapping. IDs match QuestionBank's core-day/deep-day IDs.
 const conceptQuestionMap: Record<string,string[]> = {
  dna:['core-4','deep-4'], replication:['core-5','deep-5'], rna:['core-5','deep-5','core-6','deep-6'],
@@ -74,7 +84,7 @@ const prerequisite = [
  {id:'controls',title:'结果判读与对照',detail:'理解阳性/阴性对照、污染风险、非特异扩增及产物验证。',check:'知道“出现条带”并不单独证明序列身份正确。'},
 ];
 
-export default function ScienceExplorer({openCourse,openQuestionBank}:{openCourse:(day:number)=>void;openQuestionBank?:()=>void}) {
+export default function ScienceExplorer({openCourse,openQuestionBank,openConcept}:{openCourse:(day:number)=>void;openQuestionBank?:()=>void;openConcept?:(term:string)=>void}) {
  const [tab,setTab] = useState<ExplorerTab>('graph');
  const [selectedTopic,setSelectedTopic] = useState('dna');
  const [animationId,setAnimationId] = useState('pcr');
@@ -117,6 +127,7 @@ export default function ScienceExplorer({openCourse,openQuestionBank}:{openCours
    </section>
    <aside className="science-panel dependency-detail-panel"><span className="science-kicker">KNOWLEDGE NODE · {nodeStatus}</span><h2>{current.name}</h2><p className="dependency-definition">{current.desc}</p><div className="dependency-detail-actions"><button className="button-primary" onClick={()=>openCourse(meta?.day ?? 1)}>打开教材章节 <span>→</span></button><span>第 {meta?.day ?? '—'} 章</span></div>
     <section className="dependency-evidence"><h3>教材段落</h3><strong>{textbook[meta?.day ?? 1].heading}</strong><p>{textbook[meta?.day ?? 1].reading}</p><button onClick={()=>openCourse(meta?.day ?? 1)}>阅读完整章节 ↗</button></section>
+    <section className="dependency-evidence"><h3>概念库中的相关概念</h3><p className="dependency-small-note">这些概念在概念库中有完整定义、机制与边界说明。</p><div className="dependency-concept-links">{(nodeConceptTerms[selectedTopic]??[]).map(term=>{const c=findConcept(term);return c?<button key={term} onClick={()=>openConcept?.(term)}>{term} ↗</button>:null;})}</div></section>
     <section className="dependency-evidence"><h3>对应题目与掌握情况</h3><p className="dependency-small-note">错题总数：{weakCount} 道（基于本机章节题库最近一次作答记录）</p>{mappedQuestions.map(q=>{const record=questionRecords[q.id];return <article className="dependency-question" key={q.id}><div><span>{q.level}</span><b className={!record?'question-new':record.correct?'question-mastered':'question-weak'}>{!record?'未作答':record.correct?'最近答对':'最近答错'}</b></div><p>{q.prompt}</p><button onClick={()=>openQuestionBank ? openQuestionBank() : openCourse(Number(q.id.split('-')[1]) || meta?.day || 1)}>进入章节题库 ↗</button></article>})}</section>
     <section className="dependency-evidence"><h3>参考来源</h3>{(meta?.sourceIndexes ?? []).map(index=>sources[index]&&<a className="dependency-source" key={sources[index].url} href={sources[index].url} target="_blank" rel="noreferrer"><strong>{sources[index].title}</strong><small>{sources[index].org}</small><span>{sources[index].use}</span></a>)}</section>
     <div className="science-caution">掌握度规则：最近一次答错会标记为“薄弱待复习”；最近一次答对只表示有正向记录，不等于已稳定掌握。教材段落和题目按当前课程映射，建议结合完整上下文判断。</div>

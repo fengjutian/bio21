@@ -3,7 +3,7 @@ export type Course = {
   level: '入门' | '进阶' | '挑战'; concepts: string[]; summary: string; lesson: string[];
   task: string; quiz: { question: string; options: string[]; answer: number; explanation: string };
 };
-export type Section = 'overview' | 'courses' | 'lab' | 'knowledge' | 'science' | 'analytics' | 'glossary' | 'library' | 'practice';
+export type Section = 'overview' | 'courses' | 'lab' | 'knowledge' | 'science' | 'concepts' | 'analytics' | 'glossary' | 'library' | 'practice';
 
 export type TextbookChapter = {
   heading: string; objectives: string[]; reading: string; workedExample: string; misconception: string; practice: string; furtherReading: { title: string; url: string };

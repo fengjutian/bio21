@@ -127,7 +127,7 @@ const scienceChecks = [
   ['fermentation process animation', '发酵过程', scienceSource],
   ['trusted reference list', 'const sources = [', scienceSource],
   ['science explorer navigation', 'label="生物知识探索"', appSource],
-  ['science explorer page integration', '<ScienceExplorer openCourse={openCourse} openQuestionBank={()=>setSection(\'practice\')} />', appSource],
+  ['science explorer page integration', '<ScienceExplorer openCourse={openCourse}', appSource],
 ];
 for (const [label, token, source] of scienceChecks) {
   if (!source.includes(token)) { failed = true; console.error(`FAIL science feature: ${label}`); }
@@ -178,6 +178,132 @@ const conceptMapIds = conceptMapMatch ? [...conceptMapMatch[1].matchAll(/'(?:cor
 if (!conceptMapMatch || new Set([...conceptMapMatch[1].matchAll(/([a-z]+):\[/g)].map(m => m[1])).size !== 10 || conceptMapIds.some(day => day < 1 || day > 21)) {
   failed = true; console.error('FAIL concept question mapping: expected 10 concepts with valid question IDs');
 } else console.log(`PASS concept question mapping: 10 concepts, ${conceptMapIds.length} valid question references`);
+
+// ── 生物学概念库 ────────────────────────────────────────────
+const conceptsDir = path.join(srcRoot, 'data', 'concepts');
+const conceptFiles = {
+  core: 'core.ts',
+  aligned: 'aligned.ts',
+  life: 'life.ts',
+  molecular: 'molecular.ts',
+  genetics: 'genetics.ts',
+  experiment: 'experiment.ts',
+  bioinformatics: 'bioinformatics.ts',
+  biomanufacturing: 'biomanufacturing.ts',
+  synbio: 'synbio.ts',
+};
+const conceptEntries = [];
+let conceptFilesMissing = false;
+for (const [key, file] of Object.entries(conceptFiles)) {
+  const full = path.join(conceptsDir, file);
+  if (!fs.existsSync(full)) {
+    failed = true; conceptFilesMissing = true;
+    console.error(`FAIL concept library file missing: ${file}`);
+    continue;
+  }
+  const source = fs.readFileSync(full, 'utf8');
+  const blocks = source.match(/\{\s*term:[\s\S]*?\n {2}\},/g) ?? [];
+  for (const block of blocks) {
+    const term = block.match(/term:\s*'([^']+)'/)?.[1];
+    const alias = block.match(/alias:\s*'([^']*)'/)?.[1];
+    const group = block.match(/group:\s*'([^']+)'/)?.[1];
+    const summary = block.match(/summary:\s*'([^']*)'/)?.[1];
+    const detail = block.match(/detail:\s*'([^']*)'/)?.[1];
+    const misconception = block.match(/misconception:\s*'([^']*)'/)?.[1];
+    const relatedMatch = block.match(/related:\s*\[([^\]]*)\]/)?.[1] ?? '';
+    const related = [...relatedMatch.matchAll(/'([^']+)'/g)].map(m => m[1]);
+    const chapter = Number(block.match(/chapter:\s*(\d+)/)?.[1]);
+    if (!term || !group || !summary || !detail || !misconception || !Number.isInteger(chapter)) {
+      failed = true; console.error(`FAIL concept entry missing required field in ${file}: ${term ?? '<unknown>'}`);
+      continue;
+    }
+    conceptEntries.push({ term, alias, group, summary, detail, misconception, related, chapter, file: key });
+  }
+}
+if (!conceptFilesMissing) {
+  const planSource = fs.readFileSync(path.join(conceptsDir, 'plan.ts'), 'utf8');
+  const planned = [...planSource.matchAll(/p\('(\w+)',\s*'([^']+)',\s*'([^']+)',\s*(\d+)\)/g)]
+    .map(m => ({ file: m[1], term: m[2], group: m[3], chapter: Number(m[4]) }));
+  const planTerms = new Set(planned.map(p => p.term));
+
+  const seen = new Map();
+  for (const entry of conceptEntries) {
+    if (seen.has(entry.term)) {
+      failed = true;
+      console.error(`FAIL duplicate concept term: ${entry.term} (${seen.get(entry.term)} and ${entry.file})`);
+    } else seen.set(entry.term, entry.file);
+  }
+  const written = new Set(conceptEntries.map(e => e.term));
+  const missing = planned.filter(p => !written.has(p.term));
+  if (missing.length) {
+    failed = true;
+    console.error(`FAIL concept library coverage: ${missing.length} planned concepts missing: ${missing.slice(0, 8).map(m => m.term).join(', ')}${missing.length > 8 ? ' …' : ''}`);
+  } else console.log(`PASS concept library coverage: all ${planned.length} planned concepts written`);
+
+  const drifted = conceptEntries.filter(e => {
+    const plan = planned.find(p => p.term === e.term);
+    return plan && (plan.group !== e.group || plan.chapter !== e.chapter);
+  });
+  if (drifted.length) {
+    failed = true;
+    console.error(`FAIL concept metadata drift: ${drifted.map(d => `${d.term}(group/chapter)`).slice(0, 8).join(', ')}`);
+  } else console.log('PASS concept metadata: group and chapter match the registry');
+
+  const dangling = conceptEntries.flatMap(e => e.related.filter(r => !planTerms.has(r)).map(r => `${e.term} → ${r}`));
+  const selfRefs = conceptEntries.flatMap(e => e.related.filter(r => r === e.term).map(r => e.term));
+  if (dangling.length) {
+    failed = true;
+    console.error(`FAIL dangling concept references: ${dangling.slice(0, 8).join(', ')}${dangling.length > 8 ? ' …' : ''}`);
+  } else console.log('PASS concept references: every related term resolves in the registry');
+  if (selfRefs.length) {
+    failed = true;
+    console.error(`FAIL self-referencing concepts: ${selfRefs.slice(0, 5).join(', ')}`);
+  }
+  const thin = conceptEntries.filter(e => e.related.length < 2 || e.related.length > 3);
+  if (thin.length) {
+    failed = true;
+    console.error(`FAIL concept relation count: ${thin.length} entries outside 2–3 related terms`);
+  } else console.log('PASS concept relations: every entry links 2–3 related concepts');
+
+  const badChapter = conceptEntries.filter(e => e.chapter < 1 || e.chapter > 21);
+  if (badChapter.length) {
+    failed = true;
+    console.error(`FAIL concept chapter range: ${badChapter.length} entries outside chapters 1–21`);
+  } else console.log('PASS concept chapters: all entries map to chapters 1–21');
+
+  const groups = new Set(conceptEntries.map(e => e.group));
+  console.log(`PASS concept library: ${conceptEntries.length} entries across ${groups.size} disciplines`);
+
+  // 教材「关键术语」必须能在概念库中查到，避免学习者点击术语后无结果。
+  const enhancementSource = fs.readFileSync(path.join(srcRoot, 'data', 'chapterEnhancements.ts'), 'utf8');
+  const chapterTerms = [...enhancementSource.matchAll(/\{term:'([^']+)'/g)].map(m => m[1]);
+  const uncovered = chapterTerms.filter(t => !planTerms.has(t));
+  if (uncovered.length) {
+    failed = true;
+    console.error(`FAIL chapter term coverage: ${uncovered.length} textbook terms missing from the concept library: ${uncovered.slice(0, 8).join(', ')}${uncovered.length > 8 ? ' …' : ''}`);
+  } else console.log(`PASS chapter term coverage: all ${chapterTerms.length} textbook terms are in the concept library`);
+}
+
+const conceptBrowserPath = path.join(srcRoot, 'components', 'ConceptBrowser.tsx');
+if (!fs.existsSync(conceptBrowserPath)) {
+  failed = true; console.error('FAIL concept browser component missing');
+} else {
+  const browserSource = fs.readFileSync(conceptBrowserPath, 'utf8');
+  const browserChecks = [
+    ['concept browser navigation', 'label="生物学概念库"', appSource],
+    ['concept browser page integration', '<ConceptBrowser openCourse={openCourse}', appSource],
+    ['concept browser focus entry', 'focusTerm={conceptFocus}', appSource],
+    ['concept group filter', 'concept-group-filter', browserSource],
+    ['concept cross linking', 'focusConcept', browserSource],
+    ['concept chapter jump', 'openCourse(item.chapter)', browserSource],
+    ['concept library data binding', 'conceptLibrary', browserSource],
+    ['concept boundary display', 'concept-boundary', browserSource],
+  ];
+  for (const [label, token, source] of browserChecks) {
+    if (!source.includes(token)) { failed = true; console.error(`FAIL concept browser: ${label}`); }
+    else console.log(`PASS concept browser: ${label}`);
+  }
+}
 
 if (failed) process.exit(1);
 console.log(`\nStatic verification passed for ${files.length} TypeScript source files.`);
