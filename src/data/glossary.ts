@@ -1,0 +1,22 @@
+export const glossary = [
+ {term:'DNA（脱氧核糖核酸）',group:'分子生物学',definition:'主要遗传信息载体，由核苷酸序列组成。'},
+ {term:'RNA（核糖核酸）',group:'分子生物学',definition:'参与遗传信息表达、调控和多种细胞过程的核酸。'},
+ {term:'转录',group:'分子生物学',definition:'以 DNA 为模板合成 RNA 的过程。'},
+ {term:'翻译',group:'分子生物学',definition:'核糖体根据 mRNA 密码子合成多肽链的过程。'},
+ {term:'PCR',group:'实验技术',definition:'聚合酶链式反应，通过循环反应扩增特定 DNA 区域。'},
+ {term:'引物',group:'实验技术',definition:'为核酸合成提供起始端的短核酸序列。'},
+ {term:'电泳',group:'实验技术',definition:'利用电场中迁移差异分离带电分子的技术。'},
+ {term:'酶',group:'生物化学',definition:'能够催化生化反应、降低活化能的生物催化剂。'},
+ {term:'代谢',group:'生命基础',definition:'细胞内一系列相互关联的化学反应。'},
+ {term:'稳态',group:'生命基础',definition:'生命系统在变化条件下维持相对稳定状态的能力。'},
+ {term:'发酵',group:'生物制造',definition:'利用微生物或细胞进行物质转化或生产目标产物的过程。'},
+ {term:'生物反应器',group:'生物制造',definition:'为细胞、微生物或酶促过程提供受控环境的设备。'},
+ {term:'DBTL',group:'合成生物学',definition:'Design-Build-Test-Learn，即设计、构建、测试、学习的迭代循环。'},
+ {term:'生物传感器',group:'合成生物学',definition:'将生物识别事件转换为可测量信号的系统。'},
+ {term:'CRISPR',group:'基因编辑',definition:'一类可编程核酸识别系统，已被改造用于基因组编辑等研究。'},
+ {term:'脱靶',group:'基因编辑',definition:'编辑或识别活动发生在预期目标之外的非预期现象。'},
+ {term:'灵敏度',group:'诊断',definition:'在诊断评价中，正确识别真实阳性对象的能力。'},
+ {term:'特异性',group:'诊断',definition:'在诊断评价中，正确识别真实阴性对象的能力。'},
+ {term:'质量属性',group:'生物制造',definition:'用于描述产品身份、纯度、效力、安全性等方面的特征。'},
+ {term:'阴性对照',group:'实验设计',definition:'用于评估背景信号或非特异性结果的对照条件。'}
+];
