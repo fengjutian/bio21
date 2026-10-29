@@ -40,6 +40,7 @@ export default function QuestionBank({ openCourse }: { openCourse: (day: number)
   const [examSubmitted, setExamSubmitted] = useState(false);
   const [examSeconds, setExamSeconds] = useState(15 * 60);
   const [bestExamScore, setBestExamScore] = useState<number>(() => { try { return Number(localStorage.getItem('bio21-exam-best-v2') ?? 0); } catch { return 0; } });
+  const examScore = examQuestions.reduce((score, question) => score + (examAnswers[question.id] === question.answer ? 1 : 0), 0);
 
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); } catch { /* storage may be unavailable */ } }, [records]);
 
@@ -79,7 +80,6 @@ export default function QuestionBank({ openCourse }: { openCourse: (day: number)
     const pool = [...questions].sort(() => Math.random() - 0.5).slice(0, 20);
     setExamQuestions(pool); setExamAnswers({}); setExamSubmitted(false); setExamSeconds(15 * 60);
   }
-  const examScore = examQuestions.reduce((score, question) => score + (examAnswers[question.id] === question.answer ? 1 : 0), 0);
   function finishExam() {
     if (!examSubmitted && !window.confirm('确定交卷并查看成绩吗？未作答题目将按错误计分。')) return;
     setExamSubmitted(true);
