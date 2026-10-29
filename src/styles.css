@@ -164,6 +164,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .diagram-reading-tip strong{flex:none;font-size:10px}
 .diagram-reading-tip p{margin:0;font-size:10px;line-height:1.7;color:#66786a}
 .concept-explanation-section{margin-top:20px;padding:18px;border:1px solid #dfe8db;border-radius:12px;background:rgba(255,255,255,.68)}
+.concept-section-intro{margin:6px 0 0;color:#7c8a80;font-size:10px;line-height:1.7}
 .concept-explanation-list{display:grid;gap:8px}
 .concept-explanation-list details{border:1px solid #e1e8de;border-radius:10px;background:#fff;overflow:hidden}
 .concept-explanation-list summary{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;list-style:none}
@@ -175,7 +176,16 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .concept-explanation-list details[open] summary>b{color:#4d7856}
 .concept-explanation-list details>div{padding:14px 16px 16px 54px}
 .concept-explanation-list details p{margin:0;color:#52665a;font-size:11px;line-height:1.95}
+.concept-teaching-flow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.concept-teaching-flow>section{min-width:0;padding:12px 13px;border:1px solid #e5ebe2;border-radius:9px;background:#fbfcfa}
+.concept-teaching-flow>section>small{display:block;margin-bottom:7px;color:#608169;font:600 9px var(--mono);letter-spacing:.04em}
+.concept-teaching-flow>section>strong{display:block;color:#284b35;font-size:12px;line-height:1.8}
+.concept-teaching-flow .concept-plain{grid-column:1/-1;border-color:#cfe0ca;background:#edf5e9}
+.concept-teaching-flow .concept-boundary{border-color:#eadfc9;background:#fffaf0}
+.concept-teaching-flow .concept-boundary>small{color:#97733b}
+.concept-teaching-flow>aside{grid-column:1/-1}
 .concept-explanation-list aside{display:flex;align-items:flex-start;gap:9px;margin-top:12px;padding:10px 12px;border-radius:8px;background:#edf4e9;color:#52705a}
+.concept-teaching-flow>aside{margin-top:0}
 .concept-explanation-list aside svg{width:15px;height:15px;flex:none;margin-top:1px}
 .concept-explanation-list aside span{display:flex;flex-direction:column;gap:3px;font-size:10px;line-height:1.6}
 .concept-explanation-list aside strong{font-size:9px;color:#355d42}
@@ -297,6 +307,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .diagram-reading-tip{flex-direction:column;gap:5px}
   .concept-explanation-section{padding:14px}
   .concept-explanation-list details>div{padding:13px}
+  .concept-teaching-flow{grid-template-columns:1fr}
+  .concept-teaching-flow .concept-plain,.concept-teaching-flow>aside{grid-column:auto}
   .case-reasoning ol{grid-template-columns:1fr}
   .chapter-snapshot-grid{grid-template-columns:1fr}
 }
@@ -322,4 +334,5 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .course-list{flex:1 1 auto;max-height:none;min-height:0}
   .lesson-panel{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
   .lesson-panel::-webkit-scrollbar{display:none}
+  .lesson-panel,.lesson-content,.textbook-section,.textbook-prose{max-width:100%;overflow-wrap:anywhere;word-break:break-word}
 }
