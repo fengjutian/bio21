@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { ReactNode } from 'react';
+import { BarChart3, BookMarked, BookOpen, CheckCircle2, Clock3, Dna, FlaskConical, LayoutDashboard, LibraryBig, Lightbulb, Microscope, Network, Sparkles, Sprout } from 'lucide-react';
 import { textbook } from './data/textbook';
 import { courses } from './data/courses';
 import { glossary } from './data/glossary';
@@ -91,18 +93,18 @@ function App() {
       <button className="brand" onClick={()=>setSection('overview')} aria-label="返回首页"><span className="brand-mark">B<span>21</span></span><span className="brand-copy"><strong>Bio21</strong><small>生物工程学习实验室</small></span></button>
       <div className="sidebar-label">学习空间</div>
       <nav className="main-nav" aria-label="主导航">
-        <NavButton active={section==='overview'} icon="◫" label="学习概览" onClick={()=>setSection('overview')} />
-        <NavButton active={section==='courses'} icon="▤" label="21 天课程" onClick={()=>setSection('courses')} />
-        <NavButton active={section==='lab'} icon="⌘" label="交互实验室" onClick={()=>setSection('lab')} />
-        <NavButton active={section==='knowledge'} icon="⌘" label="知识关联图" onClick={()=>setSection('knowledge')} />
-        <NavButton active={section==='science'} icon="✳" label="生物知识探索" onClick={()=>setSection('science')} />
-        <NavButton active={section==='analytics'} icon="▥" label="学习分析" onClick={()=>setSection('analytics')} />
-        <NavButton active={section==='glossary'} icon="⌕" label="术语知识库" onClick={()=>setSection('glossary')} />
-        <NavButton active={section==='library'} icon="☆" label="教材书架" onClick={()=>setSection('library')} />
-        <NavButton active={section==='practice'} icon="✓" label="章节题库" onClick={()=>setSection('practice')} />
+        <NavButton active={section==='overview'} icon={<LayoutDashboard/>} label="学习概览" onClick={()=>setSection('overview')} />
+        <NavButton active={section==='courses'} icon={<BookOpen/>} label="21 天课程" onClick={()=>setSection('courses')} />
+        <NavButton active={section==='lab'} icon={<FlaskConical/>} label="交互实验室" onClick={()=>setSection('lab')} />
+        <NavButton active={section==='knowledge'} icon={<Network/>} label="知识关联图" onClick={()=>setSection('knowledge')} />
+        <NavButton active={section==='science'} icon={<Dna/>} label="生物知识探索" onClick={()=>setSection('science')} />
+        <NavButton active={section==='analytics'} icon={<BarChart3/>} label="学习分析" onClick={()=>setSection('analytics')} />
+        <NavButton active={section==='glossary'} icon={<LibraryBig/>} label="术语知识库" onClick={()=>setSection('glossary')} />
+        <NavButton active={section==='library'} icon={<BookMarked/>} label="教材书架" onClick={()=>setSection('library')} />
+        <NavButton active={section==='practice'} icon={<CheckCircle2/>} label="章节题库" onClick={()=>setSection('practice')} />
       </nav>
       <div className="sidebar-progress"><div className="sidebar-progress-top"><span>学习进度</span><strong>{progress}%</strong></div><div className="progress-track"><span style={{width:`${progress}%`}} /></div><small>已完成 {completed} / 21 天</small></div>
-      <div className="sidebar-bottom"><div className="leaf-icon">✳</div><p>好奇心是最好的实验工具。</p><small>每天一点，逐步建立系统认知。</small><button className="reset-progress" onClick={resetProgress}>重置本机学习进度</button></div>
+      <div className="sidebar-bottom"><div className="leaf-icon"><Sprout/></div><p>好奇心是最好的实验工具。</p><small>每天一点，逐步建立系统认知。</small><button className="reset-progress" onClick={resetProgress}>重置本机学习进度</button></div>
     </aside>
 
     <main className="main-content">
@@ -153,16 +155,16 @@ function DiagramAtlas({day}:{day:number}) {
   </div></section>;
 }
 
-function NavButton({active,icon,label,onClick}:{active:boolean;icon:string;label:string;onClick:()=>void}) { return <button className={`nav-button ${active?'active':''}`} onClick={onClick}><span className="nav-icon">{icon}</span>{label}{active&&<span className="nav-active-dot"/>}</button>; }
+function NavButton({active,icon,label,onClick}:{active:boolean;icon:ReactNode;label:string;onClick:()=>void}) { return <button className={`nav-button ${active?'active':''}`} onClick={onClick}><span className="nav-icon">{icon}</span>{label}{active&&<span className="nav-active-dot"/>}</button>; }
 
 function Overview({completed,progress,saved,openCourse,setSection}:{completed:number;progress:number;saved:SavedState;openCourse:(day:number)=>void;setSection:(s:Section)=>void}) {
  const nextDay = courses.find(c=>!saved.completed.includes(c.day))?.day ?? 21;
  const phaseCounts = [{name:'生命基础',range:'01 — 03',days:[1,2,3],color:'sage',desc:'认识生命系统的结构、能量与分子基础'},{name:'分子生物学',range:'04 — 07',days:[4,5,6,7],color:'blue',desc:'理解遗传信息如何储存、读取与调控'},{name:'实验技术',range:'08 — 12',days:[8,9,10,11,12],color:'amber',desc:'从实验设计走向常见分析技术'},{name:'生物制造',range:'13 — 15',days:[13,14,15],color:'coral',desc:'理解发酵、放大生产与质量控制'},{name:'合成生物学',range:'16 — 18',days:[16,17,18],color:'violet',desc:'用工程化方法设计与迭代生物系统'},{name:'高级应用',range:'19 — 21',days:[19,20,21],color:'dark',desc:'连接医药、诊断、安全与项目实践'}];
  return <section className="overview-page"><div className="welcome-row"><div><div className="eyebrow"><span className="eyebrow-line"/> YOUR BIOLOGY JOURNEY</div><h1>让好奇心，<em>成为生产力。</em></h1><p>从基础生命科学到生物工程应用，循序渐进地理解这个正在改变世界的领域。</p></div><div className="welcome-orbit"><div className="orbit-ring ring-one"/><div className="orbit-ring ring-two"/><div className="orbit-core">BIO<span>21</span></div><span className="orbit-dot dot-one"/><span className="orbit-dot dot-two"/><span className="orbit-dot dot-three"/></div></div>
- <div className="hero-stats"><div className="hero-stat"><span className="stat-icon green">◷</span><div><strong>21 <small>天</small></strong><span>结构化学习路径</span></div></div><div className="hero-stat"><span className="stat-icon blue">⌘</span><div><strong>06 <small>阶段</small></strong><span>从基础到综合应用</span></div></div><div className="hero-stat"><span className="stat-icon yellow">✳</span><div><strong>03 <small>模拟</small></strong><span>交互式概念实验</span></div></div><div className="hero-stat"><span className="stat-icon lilac">✓</span><div><strong>{completed.toString().padStart(2,'0')} <small>/ 21</small></strong><span>已完成课程</span></div></div></div>
+ <div className="hero-stats"><div className="hero-stat"><span className="stat-icon green"><Clock3/></span><div><strong>21 <small>天</small></strong><span>结构化学习路径</span></div></div><div className="hero-stat"><span className="stat-icon blue"><BookOpen/></span><div><strong>06 <small>阶段</small></strong><span>从基础到综合应用</span></div></div><div className="hero-stat"><span className="stat-icon yellow"><Microscope/></span><div><strong>03 <small>模拟</small></strong><span>交互式概念实验</span></div></div><div className="hero-stat"><span className="stat-icon lilac"><CheckCircle2/></span><div><strong>{completed.toString().padStart(2,'0')} <small>/ 21</small></strong><span>已完成课程</span></div></div></div>
  <div className="overview-columns"><div className="path-section"><div className="section-title-row"><div><div className="eyebrow">THE ROADMAP</div><h2>你的学习路线</h2></div><button className="text-button" onClick={()=>setSection('courses')}>查看全部课程 <span>→</span></button></div><div className="phase-grid">{phaseCounts.map((p,i)=>{const done=p.days.filter(d=>saved.completed.includes(d)).length;return <button key={p.name} className="phase-card" onClick={()=>openCourse(p.days.find(d=>!saved.completed.includes(d))??p.days[0])}><div className={`phase-art ${p.color}`}><span className="phase-art-num">0{i+1}</span><span className="phase-art-symbol">{['◉','⌬','⌁','◌','✳','◇'][i]}</span><span className="phase-art-range">{p.range}</span></div><div className="phase-card-body"><div className="phase-card-heading"><h3>{p.name}</h3><span>{done}/{p.days.length}</span></div><p>{p.desc}</p><div className="mini-progress"><span style={{width:`${done/p.days.length*100}%`}}/></div></div></button>})}</div></div>
- <aside className="continue-card"><div className="continue-top"><span className="eyebrow">PICK UP WHERE YOU LEFT OFF</span><span className="continue-spark">✳</span></div><div className="continue-visual"><div className="visual-cell cell-a"/><div className="visual-cell cell-b"/><div className="visual-cell cell-c"/><div className="visual-cell cell-d"/><div className="visual-line line-a"/><div className="visual-line line-b"/><div className="visual-line line-c"/><div className="visual-orbit"/></div><div className="continue-content"><span className="day-pill">DAY {String(nextDay).padStart(2,'0')} · {courses[nextDay-1].phase}</span><h3>{courses[nextDay-1].title}</h3><p>{courses[nextDay-1].subtitle}</p><div className="continue-progress-row"><span>整体学习进度</span><strong>{progress}%</strong></div><div className="progress-track large"><span style={{width:`${progress}%`}}/></div><button className="button-primary continue-button" onClick={()=>openCourse(nextDay)}>继续学习 <span>→</span></button><button className="lab-shortcut" onClick={()=>setSection('lab')}><span>⌘</span><span><strong>打开交互实验室</strong><small>DNA · PCR · 发酵模拟</small></span><b>↗</b></button></div></aside></div>
- <div className="bottom-note"><span className="note-icon">✳</span><div><strong>学习建议</strong><p>每天完成一节课程，先理解概念，再做知识检查。模拟器用于理解原理，并不替代真实实验培训或实验室安全规范。</p></div><button onClick={()=>setSection('glossary')}>浏览术语库 <span>→</span></button></div>
+ <aside className="continue-card"><div className="continue-top"><span className="eyebrow">PICK UP WHERE YOU LEFT OFF</span><span className="continue-spark"><Sparkles/></span></div><div className="continue-visual"><div className="visual-cell cell-a"/><div className="visual-cell cell-b"/><div className="visual-cell cell-c"/><div className="visual-cell cell-d"/><div className="visual-line line-a"/><div className="visual-line line-b"/><div className="visual-line line-c"/><div className="visual-orbit"/></div><div className="continue-content"><span className="day-pill">DAY {String(nextDay).padStart(2,'0')} · {courses[nextDay-1].phase}</span><h3>{courses[nextDay-1].title}</h3><p>{courses[nextDay-1].subtitle}</p><div className="continue-progress-row"><span>整体学习进度</span><strong>{progress}%</strong></div><div className="progress-track large"><span style={{width:`${progress}%`}}/></div><button className="button-primary continue-button" onClick={()=>openCourse(nextDay)}>继续学习 <span>→</span></button><button className="lab-shortcut" onClick={()=>setSection('lab')}><span><FlaskConical/></span><span><strong>打开交互实验室</strong><small>DNA · PCR · 发酵模拟</small></span><b>↗</b></button></div></aside></div>
+ <div className="bottom-note"><span className="note-icon"><Lightbulb/></span><div><strong>学习建议</strong><p>每天完成一节课程，先理解概念，再做知识检查。模拟器用于理解原理，并不替代真实实验培训或实验室安全规范。</p></div><button onClick={()=>setSection('glossary')}>浏览术语库 <span>→</span></button></div>
  </section>;
 }
 

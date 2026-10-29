@@ -150,6 +150,11 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .bottom-note strong{font-size:12px}.bottom-note p{font-size:10px}
 .reset-progress{margin-top:12px;width:100%;border:1px solid #dce5d9;border-radius:7px;background:transparent;color:#718078;padding:8px 6px;font-size:9px}
 .reset-progress:hover{border-color:#c9a9a1;color:#995f55;background:#fff7f5}
+.nav-icon{display:grid;place-items:center}.nav-icon svg{width:17px;height:17px;stroke-width:1.8px}
+.stat-icon svg{width:19px;height:19px;stroke-width:1.8px}
+.leaf-icon svg,.note-icon svg{width:16px;height:16px;stroke-width:1.8px}
+.continue-spark{display:grid;place-items:center}.continue-spark svg{width:16px;height:16px;stroke-width:1.8px}
+.lab-shortcut>span:first-child svg{width:16px;height:16px;stroke-width:1.8px}
 
 @media(max-width:1180px){
   .overview-columns{grid-template-columns:minmax(0,1.55fr) minmax(280px,.8fr)}
