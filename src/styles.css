@@ -180,6 +180,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .concept-teaching-flow>section{min-width:0;padding:12px 13px;border:1px solid #e5ebe2;border-radius:9px;background:#fbfcfa}
 .concept-teaching-flow>section>small{display:block;margin-bottom:7px;color:#608169;font:600 9px var(--mono);letter-spacing:.04em}
 .concept-teaching-flow>section>strong{display:block;color:#284b35;font-size:12px;line-height:1.8}
+.concept-teaching-flow .concept-analogy{grid-column:1/-1;padding:15px;border-color:#d7e3ee;background:#f2f7fb}
+.concept-teaching-flow .concept-analogy>small{color:#52758f}
+.concept-teaching-flow .concept-analogy p{color:#3f5d70;font-size:12px;line-height:1.9}
+.concept-teaching-flow .concept-analogy em{display:block;margin-top:8px;color:#81919c;font-size:9px;font-style:normal}
 .concept-teaching-flow .concept-plain{grid-column:1/-1;border-color:#cfe0ca;background:#edf5e9}
 .concept-teaching-flow .concept-boundary{border-color:#eadfc9;background:#fffaf0}
 .concept-teaching-flow .concept-boundary>small{color:#97733b}
@@ -308,7 +312,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .concept-explanation-section{padding:14px}
   .concept-explanation-list details>div{padding:13px}
   .concept-teaching-flow{grid-template-columns:1fr}
-  .concept-teaching-flow .concept-plain,.concept-teaching-flow>aside{grid-column:auto}
+  .concept-teaching-flow .concept-analogy,.concept-teaching-flow .concept-plain,.concept-teaching-flow>aside{grid-column:auto}
   .case-reasoning ol{grid-template-columns:1fr}
   .chapter-snapshot-grid{grid-template-columns:1fr}
 }
